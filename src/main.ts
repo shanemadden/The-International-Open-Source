@@ -65,7 +65,7 @@ import { collaborator } from 'international/collectivization/collaborator-obfusc
 import { userScriptManager } from 'other/userScript/userScript'
 
 // TextEncoder/Decoder polyfill for UTF-8 conversion
-import 'fastestsmallesttextencoderdecoder';
+import 'fastestsmallesttextencoderdecoder-encodeinto/EncoderDecoderTogether.min.js';
 
 import { initSync } from 'commiebot-wasm/commiebot_wasm.js';
 let wasm_module = new WebAssembly.Module(require('commiebot_wasm_bg'));
