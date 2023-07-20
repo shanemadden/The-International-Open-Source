@@ -6,6 +6,7 @@ mod logging;
 #[wasm_bindgen]
 pub fn wasm_function() {
 	info!("hello from wasm!!");
+    //panic!("panic");
 }
 
 #[wasm_bindgen]
