@@ -78,7 +78,6 @@
         "ts-node": "^10.2.0",
         "tsconfig-paths": "^3.10.1",
         "typescript": "4.4",
-        "wasm-pack": "^0.12.1",
         "yaml": "^1.10.2"
     },
     "dependencies": {
