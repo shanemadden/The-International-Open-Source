@@ -9,7 +9,7 @@
     "main": "dist/main.js",
     "scripts": {
         "build": "rollup -c",
-        "build-wasm": "cd wasm && wasm-pack build --target web",
+        "build-wasm": "cd wasm && rustup run nightly wasm-pack build --target web --config build.rustflags=['-Ctarget-cpu=mvp'] -Z build-std=std,panic_abort",
         "lint": "eslint src",
         "lint-fix": "eslint src --fix",
         "push-mmo": "rollup -c --environment DEST:mmo",
