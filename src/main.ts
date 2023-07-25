@@ -67,9 +67,9 @@ import { userScriptManager } from 'other/userScript/userScript'
 // TextEncoder/Decoder polyfill for UTF-8 conversion
 import 'fastestsmallesttextencoderdecoder-encodeinto/EncoderDecoderTogether.min.js';
 
-import { initSync } from 'commiebot-wasm/commiebot_wasm.js';
+import { initSync, InitOutput } from 'commiebot-wasm/commiebot_wasm.js';
 
-let wasm;
+let wasm: InitOutput? = null;
 
 let log_setup_done = false;
 let halt_next_tick = false;
