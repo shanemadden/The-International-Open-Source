@@ -68,12 +68,23 @@ import { userScriptManager } from 'other/userScript/userScript'
 import 'fastestsmallesttextencoderdecoder-encodeinto/EncoderDecoderTogether.min.js';
 
 import { initSync } from 'commiebot-wasm/commiebot_wasm.js';
-let wasm_module = new WebAssembly.Module(require('commiebot_wasm_bg'));
-let wasm = initSync(wasm_module);
-wasm.log_setup();
+
+let wasm;
+
+let log_setup_done = false;
+let halt_next_tick = false;
 
 function originalLoop() {
     profiler.wrap((): void => {
+
+        if (halt_next_tick === true) {
+            // wasm crashed, being safe about it having mucked up memory
+            // dispose this ivm!
+            Game.cpu.halt();
+            return
+        }
+
+
         if (Memory.me === 'PandaMaster' && Game.shard.name === 'shard0') {
             ExecutePandaMasterCode(false)
         } else if (Game.cpu.limit === 2) {
@@ -87,8 +98,6 @@ function originalLoop() {
         }
 
         memHack.run()
-
-        wasm.wasm_function()
 
         collectiveManager.update()
 
@@ -140,6 +149,27 @@ function originalLoop() {
         collectiveManager.advancedSellPixels()
 
         endTickManager.run()
+
+        if (wasm) {
+            // wasm is loaded, make sure it's done log setup
+            if (log_setup_done === false) {
+                wasm.log_setup();
+                log_setup_done = true;
+            }
+            // normal thing
+            wasm.wasm_function()
+        } else {
+            // load the bytes and compile
+            let wasm_bytes = require('commiebot_wasm_bg');
+            let wasm_module = new WebAssembly.Module(wasm_bytes);
+            wasm = initSync(wasm_module);
+            // run log setup, only recording its completion if it returns
+            wasm.log_setup();
+            log_setup_done = true;
+            // normal thing
+            wasm.wasm_function();
+        }
+        
     })
 }
 
